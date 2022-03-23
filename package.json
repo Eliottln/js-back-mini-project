@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "fastify start -l info app.js",
-    "dev": "fastify start -w -l info -P app.js -p 3001 -a 172.31.247.131"
+    "dev": "fastify start -w -l info -P app.js -p 3001"
   },
   "keywords": [],
   "author": "",
