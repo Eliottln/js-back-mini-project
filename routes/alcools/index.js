@@ -3,30 +3,54 @@
 import { Op } from "sequelize";
 import { AlcoholicDrink } from "../../database.js";
 
+function getAlcoholicDrinkAttributes(data) {
+  const res = {};
+
+  res.type = data?.type;
+  res.name = data?.name;
+  res.description = data?.description;
+  res.evaluatedPrice = data?.evaluatedPrice;
+  res.alcoholLevel = data?.alcoholLevel;
+  res.createdAt = data?.createdAt;
+  res.updatedAt = data?.updatedAt;
+
+  return res;
+}
+
 export default async function (fastify, opts) {
   fastify.get("/", async function (request, reply) {
     const query = request.query;
     const type = query?.type;
     const name = query?.name;
     const description = query?.description;
-    const imagePath = query?.imagePath;
     const evaluatedPrice = query?.evaluatedPrice;
     const alcoholLevel = query?.alcoholLevel;
     const createdAt = query?.createdAt;
     const updatedAt = query?.updatedAt;
 
     const options = { where: {} };
+    const where = options.where;
+
     if (type !== undefined) {
-      options.where.type = type;
+      where.type = { [Op.substring]: type };
     }
     if (name !== undefined) {
-      options.where.name = { [Op.substring]: name };
+      where.name = { [Op.substring]: name };
     }
     if (description !== undefined) {
-      options.where.description = { [Op.substring]: description };
+      where.description = { [Op.substring]: description };
     }
-    if (imagePath !== undefined) {
-      options.where.imagePath = imagePath;
+    if (evaluatedPrice !== undefined) {
+      where.evaluatedPrice = evaluatedPrice;
+    }
+    if (alcoholLevel !== undefined) {
+      where.alcoholLevel = alcoholLevel;
+    }
+    if (createdAt !== undefined) {
+      where.createdAt = createdAt;
+    }
+    if (updatedAt !== undefined) {
+      where.updatedAt = updatedAt;
     }
 
     return await AlcoholicDrink.findAll(options);
@@ -41,16 +65,10 @@ export default async function (fastify, opts) {
     const type = body?.type;
     const name = body?.name;
     const description = body?.description;
-    const imagePath = body?.imagePath;
     const evaluatedPrice = body?.evaluatedPrice;
     const alcoholLevel = body?.alcoholLevel;
 
-    if (
-      type === undefined ||
-      name === undefined ||
-      description === undefined ||
-      imagePath === undefined
-    ) {
+    if (type === undefined || name === undefined || description === undefined) {
       reply.code(400).header("Content-Type", "application/json; charset=utf-8");
       return {
         error: "Bad Request",
@@ -63,7 +81,6 @@ export default async function (fastify, opts) {
       type: type,
       name: name,
       description: description,
-      imagePath: imagePath,
     };
 
     if (evaluatedPrice !== undefined) {
@@ -80,7 +97,8 @@ export default async function (fastify, opts) {
     const type = body?.type;
     const name = body?.name;
     const description = body?.description;
-    const imagePath = body?.imagePath;
+    const evaluatedPrice = body?.evaluatedPrice;
+    const alcoholLevel = body?.alcoholLevel;
 
     const changedValues = {};
     if (type !== undefined) {
@@ -89,8 +107,10 @@ export default async function (fastify, opts) {
       changedValues.name = name;
     } else if (description !== undefined) {
       changedValues.description = description;
-    } else if (imagePath !== undefined) {
-      changedValues.imagePath = imagePath;
+    } else if (evaluatedPrice !== undefined) {
+      where.evaluatedPrice = evaluatedPrice;
+    } else if (alcoholLevel !== undefined) {
+      where.alcoholLevel = alcoholLevel;
     }
 
     if (Object.keys(changedValues).length === 0) {

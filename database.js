@@ -21,10 +21,6 @@ export const AlcoholicDrink = sequelize.define("alcoholic_drinks", {
     type: DataTypes.STRING(1023),
     allowNull: false,
   },
-  imagePath: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
   evaluatedPrice: {
     type: DataTypes.FLOAT.UNSIGNED,
   },
