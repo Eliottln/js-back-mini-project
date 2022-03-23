@@ -1,13 +1,18 @@
-'use strict'
+"use strict";
 
-import sensible from './plugins/sensible.js';
-import support from './plugins/support.js';
-import routes from './routes/index.js';
-import './database.js';
-import fastifyCors from 'fastify-cors';
+import fastifyCors from "fastify-cors";
+import "./database.js";
+import sensible from "./plugins/sensible.js";
+import support from "./plugins/support.js";
+import routes from "./routes/index.js";
+
 export default async function (fastify, opts) {
-  fastify.register(sensible)
-  fastify.register(support)
-  fastify.register(fastifyCors)
-  fastify.register(routes)
+  // fastify.setNotFoundHandler(function (request, reply) {
+  //   // Default not found handler with preValidation and preHandler hooks
+  // });
+
+  fastify.register(sensible);
+  fastify.register(support);
+  fastify.register(fastifyCors);
+  fastify.register(routes);
 }

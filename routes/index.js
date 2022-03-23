@@ -1,10 +1,15 @@
-'use strict'
+"use strict";
 
-import tasks from "./tasks/index.js"
+import alcools from "./alcools/index.js";
 
 export default async function (fastify, opts) {
-  fastify.get('/', async function (request, reply) {
-    return { root: true }
-  })
-  fastify.register(tasks, {prefix: 'tasks'})
+  fastify.get("/", async function (request, reply) {
+    return {
+      root: true,
+      routes: {
+        alcoholic_drinks: [],
+      },
+    };
+  });
+  fastify.register(alcools, { prefix: "alcoholic_drinks" });
 }
