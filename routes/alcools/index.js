@@ -3,20 +3,6 @@
 import { Op } from "sequelize";
 import { AlcoholicDrink } from "../../database.js";
 
-function getAlcoholicDrinkAttributes(data) {
-  const res = {};
-
-  res.type = data?.type;
-  res.name = data?.name;
-  res.description = data?.description;
-  res.evaluatedPrice = data?.evaluatedPrice;
-  res.alcoholLevel = data?.alcoholLevel;
-  res.createdAt = data?.createdAt;
-  res.updatedAt = data?.updatedAt;
-
-  return res;
-}
-
 export default async function (fastify, opts) {
   fastify.get("/", async function (request, reply) {
     const query = request.query;
@@ -108,9 +94,9 @@ export default async function (fastify, opts) {
     } else if (description !== undefined) {
       changedValues.description = description;
     } else if (evaluatedPrice !== undefined) {
-      where.evaluatedPrice = evaluatedPrice;
+      changedValues.evaluatedPrice = evaluatedPrice;
     } else if (alcoholLevel !== undefined) {
-      where.alcoholLevel = alcoholLevel;
+      changedValues.alcoholLevel = alcoholLevel;
     }
 
     if (Object.keys(changedValues).length === 0) {
