@@ -75,7 +75,7 @@ export default async function (fastify, opts) {
     if (alcoholLevel !== undefined) {
       values.alcoholLevel = alcoholLevel;
     }
-    return await AlcoholicDrink.create(values);
+    return AlcoholicDrink.create(values);
   });
 
   fastify.put("/:id", async function (request, reply) {
@@ -124,6 +124,6 @@ export default async function (fastify, opts) {
   });
 
   fastify.delete("/:id", async function (request, reply) {
-    AlcoholicDrink.destroy({ where: { id: request.params.id } });
+    await AlcoholicDrink.destroy({where: {id: request.params.id}});
   });
 }
