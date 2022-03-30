@@ -58,7 +58,7 @@ export default async function (fastify, opts) {
       reply.code(400).header("Content-Type", "application/json; charset=utf-8");
       return {
         error: "Bad Request",
-        message: "Le nom est invalid.",
+        message: "Le nom est invalide.",
         statusCode: reply.statusCode,
       };
     }
