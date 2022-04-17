@@ -25,7 +25,7 @@ export const AlcoholicDrink = sequelize.define("alcoholic_drinks", {
     type: DataTypes.FLOAT.UNSIGNED,
   },
   alcoholLevel: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.FLOAT.UNSIGNED,
   },
 });
 AlcoholicDrink.sync();

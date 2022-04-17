@@ -54,11 +54,12 @@ export default async function (fastify, opts) {
     const evaluatedPrice = body?.evaluatedPrice;
     const alcoholLevel = body?.alcoholLevel;
 
-    if (type === undefined || name === undefined || description === undefined) {
+    if (type === undefined || name === undefined || description === undefined
+        || evaluatedPrice === undefined || alcoholLevel === undefined) {
       reply.code(400).header("Content-Type", "application/json; charset=utf-8");
       return {
         error: "Bad Request",
-        message: "Le nom est invalide.",
+        message: "Impossible to add...",
         statusCode: reply.statusCode,
       };
     }
@@ -67,15 +68,11 @@ export default async function (fastify, opts) {
       type: type,
       name: name,
       description: description,
+      evaluatedPrice: evaluatedPrice,
+      alcoholLevel: alcoholLevel
     };
-
-    if (evaluatedPrice !== undefined) {
-      values.evaluatedPrice = evaluatedPrice;
-    }
-    if (alcoholLevel !== undefined) {
-      values.alcoholLevel = alcoholLevel;
-    }
-    return AlcoholicDrink.create(values);
+    AlcoholicDrink.create(values);
+    return {message: "Successfully added"}
   });
 
   fastify.put("/:id", async function (request, reply) {
@@ -89,13 +86,17 @@ export default async function (fastify, opts) {
     const changedValues = {};
     if (type !== undefined) {
       changedValues.type = type;
-    } else if (name !== undefined) {
+    }
+    if (name !== undefined) {
       changedValues.name = name;
-    } else if (description !== undefined) {
+    }
+    if (description !== undefined) {
       changedValues.description = description;
-    } else if (evaluatedPrice !== undefined) {
+    }
+    if (evaluatedPrice !== undefined) {
       changedValues.evaluatedPrice = evaluatedPrice;
-    } else if (alcoholLevel !== undefined) {
+    }
+    if (alcoholLevel !== undefined) {
       changedValues.alcoholLevel = alcoholLevel;
     }
 
@@ -103,7 +104,7 @@ export default async function (fastify, opts) {
       reply.code(400).header("Content-Type", "application/json; charset=utf-8");
       return {
         error: "Bad Request",
-        message: "Aucun champ n'a été changé.",
+        message: "Impossible operation...",
         statusCode: reply.statusCode,
       };
     }
@@ -111,7 +112,8 @@ export default async function (fastify, opts) {
     const currentAlcoholicDrink = await AlcoholicDrink.findOne({
       where: { id: request.params.id },
     });
-    return await currentAlcoholicDrink.update(changedValues);
+    await currentAlcoholicDrink.update(changedValues);
+    return {message:"Successfully completed !"}
   });
 
   fastify.get("/stats", async function (request, reply) {
