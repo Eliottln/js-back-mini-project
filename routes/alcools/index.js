@@ -135,6 +135,7 @@ export default async function (fastify, opts) {
   });
 
   fastify.delete("/:id", async function (request, reply) {
-    await AlcoholicDrink.destroy({ where: { id: request.params.id } });
+    AlcoholicDrink.destroy({ where: { id: request.params.id } });
+    reply.code(204);
   });
 }
