@@ -54,12 +54,11 @@ export default async function (fastify, opts) {
     const evaluatedPrice = body?.evaluatedPrice;
     const alcoholLevel = body?.alcoholLevel;
 
-    if (type === undefined || name === undefined || description === undefined
-        || evaluatedPrice === undefined || alcoholLevel === undefined) {
+    if (type === undefined || name === undefined || description === undefined) {
       reply.code(400).header("Content-Type", "application/json; charset=utf-8");
       return {
         error: "Bad Request",
-        message: "Impossible to add...",
+        message: "Some attributes are missing.",
         statusCode: reply.statusCode,
       };
     }
@@ -68,11 +67,16 @@ export default async function (fastify, opts) {
       type: type,
       name: name,
       description: description,
-      evaluatedPrice: evaluatedPrice,
-      alcoholLevel: alcoholLevel
     };
-    AlcoholicDrink.create(values);
-    return {message: "Successfully added"}
+
+    if (evaluatedPrice !== undefined) {
+      values.evaluatedPrice = evaluatedPrice;
+    }
+    if (alcoholLevel !== undefined) {
+      values.alcoholLevel = alcoholLevel;
+    }
+
+    return await AlcoholicDrink.create(values);
   });
 
   fastify.put("/:id", async function (request, reply) {
@@ -104,7 +108,7 @@ export default async function (fastify, opts) {
       reply.code(400).header("Content-Type", "application/json; charset=utf-8");
       return {
         error: "Bad Request",
-        message: "Impossible operation...",
+        message: "No attribute were changed.",
         statusCode: reply.statusCode,
       };
     }
@@ -112,20 +116,25 @@ export default async function (fastify, opts) {
     const currentAlcoholicDrink = await AlcoholicDrink.findOne({
       where: { id: request.params.id },
     });
-    await currentAlcoholicDrink.update(changedValues);
-    return {message:"Successfully completed !"}
+    return await currentAlcoholicDrink.update(changedValues);
   });
 
   fastify.get("/stats", async function (request, reply) {
     const allAlcoholDrinks = await AlcoholicDrink.findAll();
     const nbAlcoholDrinks = allAlcoholDrinks.length;
 
+    let collectionValue = 0;
+    allAlcoholDrinks.forEach((alcohol) => {
+      collectionValue += alcohol.evaluatedPrice;
+    });
+
     return {
       total: nbAlcoholDrinks,
+      collectionValue,
     };
   });
 
   fastify.delete("/:id", async function (request, reply) {
-    await AlcoholicDrink.destroy({where: {id: request.params.id}});
+    await AlcoholicDrink.destroy({ where: { id: request.params.id } });
   });
 }
