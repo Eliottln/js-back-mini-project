@@ -21,7 +21,7 @@ export const AlcoholicDrink = sequelize.define("alcoholic_drinks", {
     type: DataTypes.STRING(1023),
     allowNull: false,
   },
-  evaluatedPrice: {
+  estimatedPrice: {
     type: DataTypes.FLOAT.UNSIGNED,
   },
   alcoholLevel: {
