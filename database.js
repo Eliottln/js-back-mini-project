@@ -9,11 +9,11 @@ try {
 }
 
 export const AlcoholicDrink = sequelize.define("alcoholic_drinks", {
-  type: {
+  name: {
     type: DataTypes.STRING(50),
     allowNull: false,
   },
-  name: {
+  type: {
     type: DataTypes.STRING(50),
     allowNull: false,
   },
@@ -23,6 +23,7 @@ export const AlcoholicDrink = sequelize.define("alcoholic_drinks", {
   },
   estimatedPrice: {
     type: DataTypes.FLOAT.UNSIGNED,
+    allowNull: false,
   },
   alcoholLevel: {
     type: DataTypes.FLOAT.UNSIGNED,
